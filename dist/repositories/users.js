@@ -28,5 +28,19 @@ class UsersRepo {
             .catch((err) => console.log(err));
         return userInfo;
     };
+    static findUserByNameAndPassword = async (username, password) => {
+        const findUserQuery = `
+            SELECT * FROM users WHERE name = $1 and password = $2
+        `;
+        let userInfo = [];
+        await client_1.pool.connect();
+        await client_1.pool
+            .query(findUserQuery, [username, password])
+            .then((result) => {
+            userInfo = result.rows;
+        })
+            .catch((err) => console.log(err));
+        return userInfo;
+    };
 }
 exports.UsersRepo = UsersRepo;

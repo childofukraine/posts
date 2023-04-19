@@ -28,4 +28,22 @@ export class UsersRepo {
       .catch((err) => console.log(err));
     return userInfo;
   };
+
+  static findUserByNameAndPassword = async (username: string,password: string) => {
+    const findUserQuery = `
+            SELECT * FROM users WHERE name = $1 and password = $2
+        `;
+    let userInfo: UserInfo[] = [];
+    await pool.connect();
+
+    await pool
+      .query(findUserQuery, [username,password])
+      .then((result) => {
+        userInfo = result.rows;
+      })
+      .catch((err) => console.log(err));
+    return userInfo;
+  };
+
+
 }

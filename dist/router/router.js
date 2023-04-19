@@ -8,3 +8,4 @@ const express_1 = __importDefault(require("express"));
 const controller_1 = require("../controller/controller");
 exports.router = express_1.default.Router();
 exports.router.post('/registration', controller_1.Controller.registration);
+exports.router.post('/login', controller_1.Controller.login);
