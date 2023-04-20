@@ -8,7 +8,6 @@ export class UsersRepo {
             INSERT INTO users (name,password)
             VALUES ($1, $2)
         `;
-      await pool.connect();
       pool.query(insertUserQuery, [username, password], (err, _res) => {
         if (err) throw err;
       });
@@ -24,7 +23,6 @@ export class UsersRepo {
             SELECT * FROM users WHERE name = $1
         `;
       let userInfo: UserInfo[] = [];
-      await pool.connect();
 
       await pool
         .query(findUserQuery, [username])
@@ -48,7 +46,6 @@ export class UsersRepo {
             SELECT * FROM users WHERE name = $1 and password = $2
         `;
       let userInfo: UserInfo[] = [];
-      await pool.connect();
 
       await pool
         .query(findUserQuery, [username, password])
