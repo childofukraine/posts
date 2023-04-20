@@ -9,3 +9,5 @@ const controller_1 = require("../controller/controller");
 exports.router = express_1.default.Router();
 exports.router.post('/registration', controller_1.Controller.registration);
 exports.router.post('/login', controller_1.Controller.login);
+exports.router.post('/create-post', controller_1.Controller.createPost);
+exports.router.get('/posts', controller_1.Controller.posts);

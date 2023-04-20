@@ -6,17 +6,22 @@ client_1.client.connect(() => {
     client_1.client.query(schema_1.usersTableQuery, (err, res) => {
         if (err)
             throw err;
-        console.log('Таблица users создана (если не существует)');
+        console.log("Таблица users создана (если не существует)");
     });
     client_1.client.query(schema_1.postsTableQuery, (err, res) => {
         if (err)
             throw err;
-        console.log('Таблица posts создана (если не существует)');
+        console.log("Таблица posts создана (если не существует)");
     });
     client_1.client.query(schema_1.commentsTableQuery, (err, res) => {
         if (err)
             throw err;
-        console.log('Таблица comments создана (если не существует)');
+        console.log("Таблица comments создана (если не существует)");
+    });
+    client_1.client.query(schema_1.likesTableQuery, (err, res) => {
+        if (err)
+            throw err;
+        console.log("Таблица likes создана (если не существует)");
         client_1.client.end();
     });
 });

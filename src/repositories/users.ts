@@ -1,14 +1,14 @@
-import { client, pool } from "../database/client";
+import { pool } from "../database/client";
 import { UserInfo } from "../types";
 
 export class UsersRepo {
   static addUser = async (username: string, password: string) => {
     const insertUserQuery = `
             INSERT INTO users (name,password)
-            VALUES ('${username}','${password}')
+            VALUES ($1, $2)
         `;
     await pool.connect();
-    pool.query(insertUserQuery, (err, _res) => {
+    pool.query(insertUserQuery, [username, password], (err, _res) => {
       if (err) throw err;
     });
   };
@@ -29,7 +29,10 @@ export class UsersRepo {
     return userInfo;
   };
 
-  static findUserByNameAndPassword = async (username: string,password: string) => {
+  static findUserByNameAndPassword = async (
+    username: string,
+    password: string
+  ) => {
     const findUserQuery = `
             SELECT * FROM users WHERE name = $1 and password = $2
         `;
@@ -37,13 +40,11 @@ export class UsersRepo {
     await pool.connect();
 
     await pool
-      .query(findUserQuery, [username,password])
+      .query(findUserQuery, [username, password])
       .then((result) => {
         userInfo = result.rows;
       })
       .catch((err) => console.log(err));
     return userInfo;
   };
-
-
 }

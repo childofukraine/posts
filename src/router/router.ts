@@ -5,3 +5,5 @@ export const router = express.Router();
 
 router.post('/registration',Controller.registration)
 router.post('/login',Controller.login)
+router.post('/create-post',Controller.createPost)
+router.get('/posts',Controller.posts)

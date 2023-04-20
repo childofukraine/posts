@@ -4,7 +4,7 @@ export const usersTableQuery = `
         name VARCHAR(100) UNIQUE NOT NULL,
         password VARCHAR(100) NOT NULL
     )
-`
+`;
 
 export const postsTableQuery = `
     CREATE TABLE IF NOT EXISTS posts (
@@ -12,8 +12,7 @@ export const postsTableQuery = `
         user_name VARCHAR(100) NOT NULL REFERENCES users(name),
         post_name VARCHAR(100) NOT NULL,
         post_text TEXT NOT NULL,
-        like_count INTEGER DEFAULT 0 NOT NULL,
-        dislike_count INTEGER DEFAULT 0 NOT NULL
+        created_at TIMESTAMP DEFAULT NOW()
     )
 `;
 
@@ -27,3 +26,12 @@ export const commentsTableQuery = `
     )
 `;
 
+export const likesTableQuery = `
+    CREATE TABLE IF NOT EXISTS likes (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        post_id INTEGER NOT NULL REFERENCES posts(id),
+        type VARCHAR(10) NOT NULL CHECK (type IN ('like', 'dislike')),
+        created_at TIMESTAMP DEFAULT NOW()
+    );
+`;

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.commentsTableQuery = exports.postsTableQuery = exports.usersTableQuery = void 0;
+exports.likesTableQuery = exports.commentsTableQuery = exports.postsTableQuery = exports.usersTableQuery = void 0;
 exports.usersTableQuery = `
     CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
@@ -14,8 +14,7 @@ exports.postsTableQuery = `
         user_name VARCHAR(100) NOT NULL REFERENCES users(name),
         post_name VARCHAR(100) NOT NULL,
         post_text TEXT NOT NULL,
-        like_count INTEGER DEFAULT 0 NOT NULL,
-        dislike_count INTEGER DEFAULT 0 NOT NULL
+        created_at TIMESTAMP DEFAULT NOW()
     )
 `;
 exports.commentsTableQuery = `
@@ -26,4 +25,13 @@ exports.commentsTableQuery = `
         comment_text TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT NOW()
     )
+`;
+exports.likesTableQuery = `
+    CREATE TABLE IF NOT EXISTS likes (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        post_id INTEGER NOT NULL REFERENCES posts(id),
+        type VARCHAR(10) NOT NULL CHECK (type IN ('like', 'dislike')),
+        created_at TIMESTAMP DEFAULT NOW()
+    );
 `;

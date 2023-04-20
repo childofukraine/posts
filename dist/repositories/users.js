@@ -6,10 +6,10 @@ class UsersRepo {
     static addUser = async (username, password) => {
         const insertUserQuery = `
             INSERT INTO users (name,password)
-            VALUES ('${username}','${password}')
+            VALUES ($1, $2)
         `;
         await client_1.pool.connect();
-        client_1.pool.query(insertUserQuery, (err, _res) => {
+        client_1.pool.query(insertUserQuery, [username, password], (err, _res) => {
             if (err)
                 throw err;
         });
