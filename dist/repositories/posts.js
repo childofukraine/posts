@@ -1,12 +1,17 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostsRepo = void 0;
+const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const client_1 = require("../database/client");
 class PostsRepo {
     static createPost = async (username, postName, postText) => {
-        const insertIntoPostQuery = `INSERT INTO posts (user_name, post_name, post_text) VALUES ($1, $2, $3)`;
+        const insertIntoPostQuery = `INSERT INTO posts (user_name, post_name, post_text,created_at) VALUES ($1, $2, $3,$4)`;
+        const createdAt = (0, moment_timezone_1.default)().format('DD.MM.y HH:mm:s');
         await client_1.pool.connect();
-        client_1.pool.query(insertIntoPostQuery, [username, postName, postText], (err, _res) => {
+        client_1.pool.query(insertIntoPostQuery, [username, postName, postText, createdAt], (err, _res) => {
             if (err)
                 throw err;
         });

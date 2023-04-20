@@ -12,7 +12,7 @@ export const postsTableQuery = `
         user_name VARCHAR(100) NOT NULL REFERENCES users(name),
         post_name VARCHAR(100) NOT NULL,
         post_text TEXT NOT NULL,
-        created_at TIMESTAMP DEFAULT NOW()
+        created_at VARCHAR(100) NOT NULL
     )
 `;
 
@@ -22,7 +22,7 @@ export const commentsTableQuery = `
         post_id INTEGER NOT NULL REFERENCES posts(id),
         user_name VARCHAR(100) NOT NULL,
         comment_text TEXT NOT NULL,
-        created_at TIMESTAMP DEFAULT NOW()
+        created_at VARCHAR(100) NOT NULL
     )
 `;
 
@@ -32,6 +32,6 @@ export const likesTableQuery = `
         user_id INTEGER NOT NULL REFERENCES users(id),
         post_id INTEGER NOT NULL REFERENCES posts(id),
         type VARCHAR(10) NOT NULL CHECK (type IN ('like', 'dislike')),
-        created_at TIMESTAMP DEFAULT NOW()
+        created_at VARCHAR(100) NOT NULL
     );
 `;

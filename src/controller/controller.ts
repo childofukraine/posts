@@ -62,16 +62,16 @@ export class Controller {
       const post = await PostsRepo.createPost(username, postName, postText);
       if (post.success) {
         res.json({
-          message: 'Post created'
-        })
+          message: "Post created",
+        });
       }
     } catch (err) {
-      next(err)
+      next(err);
     }
   };
 
-  static posts = async (req: Request,res: Response,next: NextFunction) => {
-    const [posts] = await PostsRepo.getPosts()
-    res.json({data: posts})
-  }
+  static posts = async (req: Request, res: Response, next: NextFunction) => {
+    const [posts] = await PostsRepo.getPosts();
+    res.json({ data: posts });
+  };
 }

@@ -1,5 +1,6 @@
+import moment from 'moment-timezone';
 import { pool } from "../database/client";
-import { Post } from "../types";
+
 
 export class PostsRepo {
   static createPost = async (
@@ -7,11 +8,13 @@ export class PostsRepo {
     postName: string,
     postText: string
   ) => {
-    const insertIntoPostQuery = `INSERT INTO posts (user_name, post_name, post_text) VALUES ($1, $2, $3)`;
+
+    const insertIntoPostQuery = `INSERT INTO posts (user_name, post_name, post_text,created_at) VALUES ($1, $2, $3,$4)`;
+    const createdAt = moment().format('DD.MM.y HH:mm:s')
     await pool.connect();
     pool.query(
       insertIntoPostQuery,
-      [username, postName, postText],
+      [username, postName, postText,createdAt],
       (err, _res) => {
         if (err) throw err;
       }

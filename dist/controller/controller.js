@@ -49,7 +49,7 @@ class Controller {
             const post = await posts_1.PostsRepo.createPost(username, postName, postText);
             if (post.success) {
                 res.json({
-                    message: 'Post created'
+                    message: "Post created",
                 });
             }
         }

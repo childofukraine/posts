@@ -4,43 +4,61 @@ exports.UsersRepo = void 0;
 const client_1 = require("../database/client");
 class UsersRepo {
     static addUser = async (username, password) => {
-        const insertUserQuery = `
+        try {
+            const insertUserQuery = `
             INSERT INTO users (name,password)
             VALUES ($1, $2)
         `;
-        await client_1.pool.connect();
-        client_1.pool.query(insertUserQuery, [username, password], (err, _res) => {
-            if (err)
-                throw err;
-        });
+            await client_1.pool.connect();
+            client_1.pool.query(insertUserQuery, [username, password], (err, _res) => {
+                if (err)
+                    throw err;
+            });
+        }
+        catch (err) {
+            console.log(err);
+            return [];
+        }
     };
     static findUser = async (username) => {
-        const findUserQuery = `
+        try {
+            const findUserQuery = `
             SELECT * FROM users WHERE name = $1
         `;
-        let userInfo = [];
-        await client_1.pool.connect();
-        await client_1.pool
-            .query(findUserQuery, [username])
-            .then((result) => {
-            userInfo = result.rows;
-        })
-            .catch((err) => console.log(err));
-        return userInfo;
+            let userInfo = [];
+            await client_1.pool.connect();
+            await client_1.pool
+                .query(findUserQuery, [username])
+                .then((result) => {
+                userInfo = result.rows;
+            })
+                .catch((err) => console.log(err));
+            return userInfo;
+        }
+        catch (err) {
+            console.log(err);
+            return [];
+        }
     };
     static findUserByNameAndPassword = async (username, password) => {
-        const findUserQuery = `
+        try {
+            const findUserQuery = `
             SELECT * FROM users WHERE name = $1 and password = $2
         `;
-        let userInfo = [];
-        await client_1.pool.connect();
-        await client_1.pool
-            .query(findUserQuery, [username, password])
-            .then((result) => {
-            userInfo = result.rows;
-        })
-            .catch((err) => console.log(err));
-        return userInfo;
+            let userInfo = [];
+            await client_1.pool.connect();
+            await client_1.pool
+                .query(findUserQuery, [username, password])
+                .then((result) => {
+                userInfo = result.rows;
+            })
+                .catch((err) => console.log(err));
+            return userInfo;
+        }
+        catch (err) {
+            console.log(err);
+            return [];
+        }
     };
 }
 exports.UsersRepo = UsersRepo;
