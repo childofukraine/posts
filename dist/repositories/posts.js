@@ -30,5 +30,30 @@ class PostsRepo {
         });
         return posts;
     };
+    static postById = async (postId) => {
+        const selectPostByIdQuery = `SELECT * FROM posts WHERE id = $1`;
+        const selectCommentsQuery = `SELECT * FROM comments WHERE post_id = $1`;
+        let postArray = [];
+        let commentsArray = [];
+        await client_1.pool
+            .query(selectPostByIdQuery, [postId])
+            .then((post) => {
+            postArray.push(post.rows);
+        })
+            .catch((err) => {
+            if (err)
+                throw err;
+        });
+        await client_1.pool
+            .query(selectCommentsQuery, [postId])
+            .then((comments) => {
+            commentsArray = comments.rows;
+        })
+            .catch((err) => {
+            if (err)
+                throw err;
+        });
+        return { post: postArray[0], comments: commentsArray };
+    };
 }
 exports.PostsRepo = PostsRepo;

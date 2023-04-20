@@ -4,6 +4,7 @@ exports.Controller = void 0;
 const users_1 = require("../repositories/users");
 const boom_1 = require("@hapi/boom");
 const posts_1 = require("../repositories/posts");
+const comments_1 = require("../repositories/comments");
 class Controller {
     static registration = async (req, res, next) => {
         const username = req.body.username;
@@ -58,8 +59,49 @@ class Controller {
         }
     };
     static posts = async (req, res, next) => {
-        const [posts] = await posts_1.PostsRepo.getPosts();
-        res.json({ data: posts });
+        try {
+            const [posts] = await posts_1.PostsRepo.getPosts();
+            if (!posts.length) {
+                throw (0, boom_1.badData)(`Something went wrong!`);
+            }
+            res.json({ data: posts });
+        }
+        catch (err) {
+            next(err);
+        }
+    };
+    static createComment = async (req, res, next) => {
+        const { username } = req.body;
+        const postId = req.body.postid;
+        const commentText = req.body.commenttext;
+        try {
+            const userExists = await users_1.UsersRepo.findUser(username);
+            if (!userExists.length) {
+                throw (0, boom_1.badData)(`A user with this username: ${username} doesnt exists!`);
+            }
+            const comment = await comments_1.CommentsRepo.createComment(postId, username, commentText);
+            if (comment.success) {
+                res.json({
+                    message: "Comment created",
+                });
+            }
+        }
+        catch (err) {
+            next(err);
+        }
+    };
+    static postById = async (req, res, next) => {
+        try {
+            const { postId } = req.params;
+            const { post, comments } = await posts_1.PostsRepo.postById(postId);
+            if (!post.length) {
+                throw (0, boom_1.badData)(`Something went wrong!`);
+            }
+            res.json({ post, comments });
+        }
+        catch (err) {
+            next(err);
+        }
     };
 }
 exports.Controller = Controller;

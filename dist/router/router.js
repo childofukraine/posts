@@ -11,3 +11,5 @@ exports.router.post('/registration', controller_1.Controller.registration);
 exports.router.post('/login', controller_1.Controller.login);
 exports.router.post('/create-post', controller_1.Controller.createPost);
 exports.router.get('/posts', controller_1.Controller.posts);
+exports.router.post('/create-comment', controller_1.Controller.createComment);
+exports.router.get('/post/:postId', controller_1.Controller.postById);

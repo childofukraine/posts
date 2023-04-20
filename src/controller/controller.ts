@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { UsersRepo } from "../repositories/users";
 import { badData } from "@hapi/boom";
 import { PostsRepo } from "../repositories/posts";
+import { CommentsRepo } from "../repositories/comments";
 
 export class Controller {
   static registration = async (
@@ -71,7 +72,57 @@ export class Controller {
   };
 
   static posts = async (req: Request, res: Response, next: NextFunction) => {
-    const [posts] = await PostsRepo.getPosts();
-    res.json({ data: posts });
+    try {
+      const [posts] = await PostsRepo.getPosts();
+      if (!posts.length) {
+        throw badData(`Something went wrong!`);
+      }
+      res.json({ data: posts });
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  static createComment = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { username } = req.body;
+    const postId = req.body.postid;
+    const commentText = req.body.commenttext;
+
+    try {
+      const userExists = await UsersRepo.findUser(username);
+      if (!userExists.length) {
+        throw badData(`A user with this username: ${username} doesnt exists!`);
+      }
+
+      const comment = await CommentsRepo.createComment(
+        postId,
+        username,
+        commentText
+      );
+      if (comment.success) {
+        res.json({
+          message: "Comment created",
+        });
+      }
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  static postById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { postId } = req.params;
+      const { post, comments } = await PostsRepo.postById(postId);
+      if (!post.length) {
+        throw badData(`Something went wrong!`);
+      }
+      res.json({ post, comments });
+    } catch (err) {
+      next(err);
+    }
   };
 }
