@@ -26,7 +26,7 @@
 ```json
 {
   "username": "test",
-  "pastname": "test",
+  "postname": "test",
   "posttext": "test"
 }
 ```
