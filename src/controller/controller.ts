@@ -113,6 +113,12 @@ export class Controller {
         throw badData(`A user with this username: ${username} doesnt exists!`);
       }
 
+      const postExists = await PostsRepo.postExists(postId);
+
+      if (!postExists.length) {
+        throw badData("Post doesn`t exists!");
+      }
+
       const comment = await CommentsRepo.createComment(
         postId,
         username,

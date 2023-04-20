@@ -94,6 +94,10 @@ class Controller {
             if (!userExists.length) {
                 throw (0, boom_1.badData)(`A user with this username: ${username} doesnt exists!`);
             }
+            const postExists = await posts_1.PostsRepo.postExists(postId);
+            if (!postExists.length) {
+                throw (0, boom_1.badData)("Post doesn`t exists!");
+            }
             const comment = await comments_1.CommentsRepo.createComment(postId, username, commentText);
             if (comment.success) {
                 res.json({
