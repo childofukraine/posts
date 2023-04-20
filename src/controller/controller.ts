@@ -3,6 +3,7 @@ import { UsersRepo } from "../repositories/users";
 import { badData } from "@hapi/boom";
 import { PostsRepo } from "../repositories/posts";
 import { CommentsRepo } from "../repositories/comments";
+import { LikesRepo } from "../repositories/likes";
 
 export class Controller {
   static registration = async (
@@ -51,7 +52,7 @@ export class Controller {
     res: Response,
     next: NextFunction
   ) => {
-    const username = req.body.username;
+    const { username } = req.body;
     const postName = req.body.postname;
     const postText = req.body.posttext;
     try {
@@ -73,11 +74,25 @@ export class Controller {
 
   static posts = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const [posts] = await PostsRepo.getPosts();
+      const posts = await PostsRepo.getPosts();
       if (!posts.length) {
         throw badData(`Something went wrong!`);
       }
       res.json({ data: posts });
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  static postById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { postId } = req.params;
+      const postExists = await PostsRepo.postExists(postId);
+      if (!postExists.length) {
+        throw badData("Post doesn`t exists!");
+      }
+      const { post, comments } = await PostsRepo.postById(postId);
+      res.json({ post, comments });
     } catch (err) {
       next(err);
     }
@@ -113,14 +128,41 @@ export class Controller {
     }
   };
 
-  static postById = async (req: Request, res: Response, next: NextFunction) => {
+  static like = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { postId } = req.params;
-      const { post, comments } = await PostsRepo.postById(postId);
-      if (!post.length) {
-        throw badData(`Something went wrong!`);
+      const postId = req.body.postid;
+      const { username } = req.body;
+      const postExists = await PostsRepo.postExists(postId);
+
+      if (!postExists.length) {
+        throw badData("Post doesn`t exists!");
       }
-      res.json({ post, comments });
+      const like = await LikesRepo.likePost(postId, username);
+
+      const likeDeletedMessage = "Like deleted";
+      if (like?.message === likeDeletedMessage) {
+        res.json({ message: likeDeletedMessage });
+      }
+      res.json({ message: "Post liked!" });
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  static dislike = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const postId = req.body.postid;
+      const { username } = req.body;
+      const postExists = await PostsRepo.postExists(postId);
+      if (!postExists.length) {
+        throw badData("Post doesn`t exists!");
+      }
+      const dislike = await LikesRepo.dislikePost(postId, username);
+      const dislikeDeletedMessage = "Dislike deleted";
+      if (dislike?.message === dislikeDeletedMessage) {
+        res.json({ message: dislikeDeletedMessage });
+      }
+      res.json({ message: "Post disliked!" });
     } catch (err) {
       next(err);
     }

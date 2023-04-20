@@ -9,7 +9,8 @@ class UsersRepo {
             INSERT INTO users (name,password)
             VALUES ($1, $2)
         `;
-            client_1.pool.query(insertUserQuery, [username, password], (err, _res) => {
+            const insertUserValue = [username, password];
+            client_1.pool.query(insertUserQuery, insertUserValue, (err, _res) => {
                 if (err)
                     throw err;
             });
@@ -24,14 +25,9 @@ class UsersRepo {
             const findUserQuery = `
             SELECT * FROM users WHERE name = $1
         `;
-            let userInfo = [];
-            await client_1.pool
-                .query(findUserQuery, [username])
-                .then((result) => {
-                userInfo = result.rows;
-            })
-                .catch((err) => console.log(err));
-            return userInfo;
+            const findUserValues = [username];
+            const { rows: user } = await client_1.pool.query(findUserQuery, findUserValues);
+            return user;
         }
         catch (err) {
             console.log(err);
@@ -43,14 +39,9 @@ class UsersRepo {
             const findUserQuery = `
             SELECT * FROM users WHERE name = $1 and password = $2
         `;
-            let userInfo = [];
-            await client_1.pool
-                .query(findUserQuery, [username, password])
-                .then((result) => {
-                userInfo = result.rows;
-            })
-                .catch((err) => console.log(err));
-            return userInfo;
+            const findUserValues = [username, password];
+            const { rows: user } = await client_1.pool.query(findUserQuery, findUserValues);
+            return user;
         }
         catch (err) {
             console.log(err);

@@ -7,17 +7,28 @@ export class CommentsRepo {
     username: string,
     commentText: string
   ) => {
-    const insertIntoCommentsQuery = `INSERT INTO
+    try {
+      const insertIntoCommentsQuery = `INSERT INTO
          comments (post_id,user_name,comment_text,created_at) 
          VALUES ($1,$2,$3,$4)`;
-    const createdAt = moment().format("DD.MM.y HH:mm:s");
-    pool.query(
-      insertIntoCommentsQuery,
-      [postId, username, commentText, createdAt],
-      (err, _res) => {
-        if (err) throw err;
-      }
-    );
-    return { success: true, message: "Comment created successfully" };
+      const createdAt = moment().format("DD.MM.y HH:mm:ss");
+      const insertIntoCommentsValues = [
+        postId,
+        username,
+        commentText,
+        createdAt,
+      ];
+      pool.query(
+        insertIntoCommentsQuery,
+        insertIntoCommentsValues,
+        (err, _res) => {
+          if (err) throw err;
+        }
+      );
+      return { success: true, message: "Comment created successfully" };
+    } catch (err) {
+      console.log(err);
+      return { success: false, message: "Comment doesnt created" };
+    }
   };
 }

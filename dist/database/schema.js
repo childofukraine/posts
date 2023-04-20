@@ -14,6 +14,9 @@ exports.postsTableQuery = `
         user_name VARCHAR(100) NOT NULL REFERENCES users(name),
         post_name VARCHAR(100) NOT NULL,
         post_text TEXT NOT NULL,
+        likes_count INTEGER,
+        dislikes_count INTEGER,
+        rating INTEGER GENERATED ALWAYS AS (likes_count - dislikes_count) STORED,
         created_at VARCHAR(100) NOT NULL
     )
 `;
@@ -29,9 +32,8 @@ exports.commentsTableQuery = `
 exports.likesTableQuery = `
     CREATE TABLE IF NOT EXISTS likes (
         id SERIAL PRIMARY KEY,
-        user_id INTEGER NOT NULL REFERENCES users(id),
+        user_name VARCHAR(100) NOT NULL REFERENCES users(name),
         post_id INTEGER NOT NULL REFERENCES posts(id),
-        type VARCHAR(10) NOT NULL CHECK (type IN ('like', 'dislike')),
-        created_at VARCHAR(100) NOT NULL
+        is_like BOOLEAN
     );
 `;

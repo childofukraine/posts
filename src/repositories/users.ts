@@ -1,5 +1,4 @@
 import { pool } from "../database/client";
-import { UserInfo } from "../types";
 
 export class UsersRepo {
   static addUser = async (username: string, password: string) => {
@@ -8,7 +7,8 @@ export class UsersRepo {
             INSERT INTO users (name,password)
             VALUES ($1, $2)
         `;
-      pool.query(insertUserQuery, [username, password], (err, _res) => {
+      const insertUserValue = [username, password];
+      pool.query(insertUserQuery, insertUserValue, (err, _res) => {
         if (err) throw err;
       });
     } catch (err) {
@@ -22,15 +22,9 @@ export class UsersRepo {
       const findUserQuery = `
             SELECT * FROM users WHERE name = $1
         `;
-      let userInfo: UserInfo[] = [];
-
-      await pool
-        .query(findUserQuery, [username])
-        .then((result) => {
-          userInfo = result.rows;
-        })
-        .catch((err) => console.log(err));
-      return userInfo;
+      const findUserValues = [username];
+      const { rows: user } = await pool.query(findUserQuery, findUserValues);
+      return user;
     } catch (err) {
       console.log(err);
       return [];
@@ -45,15 +39,9 @@ export class UsersRepo {
       const findUserQuery = `
             SELECT * FROM users WHERE name = $1 and password = $2
         `;
-      let userInfo: UserInfo[] = [];
-
-      await pool
-        .query(findUserQuery, [username, password])
-        .then((result) => {
-          userInfo = result.rows;
-        })
-        .catch((err) => console.log(err));
-      return userInfo;
+      const findUserValues = [username, password];
+      const { rows: user } = await pool.query(findUserQuery, findUserValues);
+      return user;
     } catch (err) {
       console.log(err);
       return [];

@@ -33,7 +33,7 @@ exports.client = new pg_1.Client({
     database: process.env.DATABASE_NAME,
     password: process.env.DATABASE_PASSWORD,
     port: 5432,
-    ssl: true
+    ssl: true,
 });
 exports.pool = new pg_1.Pool({
     user: process.env.DATABASE_USER,
@@ -41,5 +41,5 @@ exports.pool = new pg_1.Pool({
     database: process.env.DATABASE_NAME,
     password: process.env.DATABASE_PASSWORD,
     port: 5432,
-    ssl: true
+    ssl: true,
 });
