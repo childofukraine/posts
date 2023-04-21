@@ -21,6 +21,16 @@
 ```
 ### - to login
 #
+### [POST] /delete-user
+### body: JSON
+```json
+{
+  "username": "test",
+  "password": "test"
+}
+```
+### - to delete a user
+#
 ### [POST] /create-post
 ### body: JSON
 ```json
