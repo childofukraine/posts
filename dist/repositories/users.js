@@ -20,13 +20,13 @@ class UsersRepo {
             return [];
         }
     };
-    static deleteUser = async (username, password) => {
+    static deleteUser = async (username) => {
         try {
             const deleteUserQuery = `
         DELETE FROM users
-        WHERE name = $1 AND password = $2;
+        WHERE name = $1;
       `;
-            const deleteUserValue = [username, password];
+            const deleteUserValue = [username];
             await client_1.pool.query(deleteUserQuery, deleteUserValue);
             return { success: true, message: "User deleted" };
         }

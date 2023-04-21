@@ -24,13 +24,12 @@ class Controller {
     };
     static deleteUser = async (req, res, next) => {
         const { username } = req.body;
-        const { password } = req.body;
         try {
-            const user = await users_1.UsersRepo.findUserByNameAndPassword(username, password);
-            if (!user.length) {
-                throw (0, boom_1.badData)(`Wrong username or password!`);
+            const userExists = await users_1.UsersRepo.findUser(username);
+            if (!userExists.length) {
+                throw (0, boom_1.badData)(`Wrong username`);
             }
-            const deleteUser = await users_1.UsersRepo.deleteUser(username, password);
+            const deleteUser = await users_1.UsersRepo.deleteUser(username);
             if (!deleteUser.success) {
                 throw (0, boom_1.badData)(`Error deleting user!`);
             }

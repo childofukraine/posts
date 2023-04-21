@@ -32,17 +32,13 @@ export class Controller {
     next: NextFunction
   ) => {
     const { username } = req.body;
-    const { password } = req.body;
 
     try {
-      const user = await UsersRepo.findUserByNameAndPassword(
-        username,
-        password
-      );
-      if (!user.length) {
-        throw badData(`Wrong username or password!`);
+      const userExists = await UsersRepo.findUser(username);
+      if (!userExists.length) {
+        throw badData(`Wrong username`);
       }
-      const deleteUser = await UsersRepo.deleteUser(username, password);
+      const deleteUser = await UsersRepo.deleteUser(username);
       if (!deleteUser.success) {
         throw badData(`Error deleting user!`);
       }

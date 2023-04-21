@@ -25,8 +25,7 @@
 ### body: JSON
 ```json
 {
-  "username": "test",
-  "password": "test"
+  "username": "test"
 }
 ```
 ### - to delete a user
