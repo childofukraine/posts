@@ -15,3 +15,4 @@ exports.router.post("/create-comment", controller_1.Controller.createComment);
 exports.router.get("/post/:postId", controller_1.Controller.postById);
 exports.router.post("/like", controller_1.Controller.like);
 exports.router.post("/dislike", controller_1.Controller.dislike);
+exports.router.post("/delete-user", controller_1.Controller.deleteUser);

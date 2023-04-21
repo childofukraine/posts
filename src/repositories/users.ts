@@ -17,6 +17,21 @@ export class UsersRepo {
     }
   };
 
+  static deleteUser = async (username: string, password: string) => {
+    try {
+      const deleteUserQuery = `
+        DELETE FROM users
+        WHERE name = $1 AND password = $2;
+      `;
+      const deleteUserValue = [username, password];
+      await pool.query(deleteUserQuery, deleteUserValue);
+      return { success: true, message: "User deleted" };
+    } catch (err) {
+      console.log(err);
+      return { success: false, message: "Error deleting user" };
+    }
+  };
+
   static findUser = async (username: string) => {
     try {
       const findUserQuery = `

@@ -22,9 +22,30 @@ class Controller {
             next(err);
         }
     };
+    static deleteUser = async (req, res, next) => {
+        const { username } = req.body;
+        const { password } = req.body;
+        try {
+            const user = await users_1.UsersRepo.findUserByNameAndPassword(username, password);
+            if (!user.length) {
+                throw (0, boom_1.badData)(`Wrong username or password!`);
+            }
+            const deleteUser = await users_1.UsersRepo.deleteUser(username, password);
+            if (!deleteUser.success) {
+                throw (0, boom_1.badData)(`Error deleting user!`);
+            }
+            res.json({
+                message: `User deleted!`,
+                status: "ok",
+            });
+        }
+        catch (err) {
+            next(err);
+        }
+    };
     static login = async (req, res, next) => {
-        const username = req.body.username;
-        const password = req.body.password;
+        const { username } = req.body;
+        const { password } = req.body;
         try {
             const user = await users_1.UsersRepo.findUserByNameAndPassword(username, password);
             if (!user.length) {

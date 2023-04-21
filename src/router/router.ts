@@ -11,3 +11,4 @@ router.post("/create-comment", Controller.createComment);
 router.get("/post/:postId", Controller.postById);
 router.post("/like", Controller.like);
 router.post("/dislike", Controller.dislike);
+router.post("/delete-user", Controller.deleteUser);
