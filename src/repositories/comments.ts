@@ -33,18 +33,29 @@ export class CommentsRepo {
       return { success: false, message: "Comment doesnt created" };
     }
   };
+
+  static selectCommentsByUsername = async (username: string) => {
+    const selectCommentsQuery = `SELECT * FROM comments WHERE user_name = $1`;
+    const selectCommentsValue = [username];
+
+    const { rows: comments } = await pool.query(
+      selectCommentsQuery,
+      selectCommentsValue
+    );
+
+    return [comments];
+  };
+
   static deleteCommentsByUsername = async (username: string) => {
-    const deleteCommentsQuery = `DELETE FROM comments WHERE post_id = $1`;
+    const [comments] = await this.selectCommentsByUsername(username);
 
-    const [posts] = await PostsRepo.selectPostsByUsername(username)
-    const deleteCommentsValue = posts.map((post: Post) => post.id)
+    const deleteCommentsQuery = `DELETE FROM comments WHERE user_name = $1`;
+    const deleteCommentsValue = comments.map((comment) => comment.user_name);
 
-    deleteCommentsValue.forEach((value) => {
+    deleteCommentsValue.forEach((value: any) => {
       pool.query(deleteCommentsQuery, [value], (err, _res) => {
         if (err) console.log(err);
       });
-    })
-    
-    return { success: true, message: "Comments deleted successfully" };
+    });
   };
 }

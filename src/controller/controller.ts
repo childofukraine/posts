@@ -38,11 +38,16 @@ export class Controller {
       if (!userExists.length) {
         throw badData(`Wrong username`);
       }
-      await LikesRepo.deleteLikesByPostId(username)
-      await CommentsRepo.deleteCommentsByUsername(
+
+      const [userLikes] = await LikesRepo.selectLikesByUsername(username);
+      const [userComments] = await CommentsRepo.selectCommentsByUsername(
         username
       );
-      await PostsRepo.deletePostByUserName(username);
+      const [userPosts] = await PostsRepo.selectPostsByUsername(username);
+      if (userLikes.length) await LikesRepo.deleteLikesByUsername(username);
+      if (userComments.length)
+        await CommentsRepo.deleteCommentsByUsername(username);
+      if (userPosts.length) await PostsRepo.deletePostByUserName(username);
 
       const deleteUser = await UsersRepo.deleteUser(username);
       if (!deleteUser.success) {

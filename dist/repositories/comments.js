@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommentsRepo = void 0;
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const client_1 = require("../database/client");
-const posts_1 = require("./posts");
 class CommentsRepo {
     static createComment = async (postId, username, commentText) => {
         try {
@@ -31,17 +30,22 @@ class CommentsRepo {
             return { success: false, message: "Comment doesnt created" };
         }
     };
+    static selectCommentsByUsername = async (username) => {
+        const selectCommentsQuery = `SELECT * FROM comments WHERE user_name = $1`;
+        const selectCommentsValue = [username];
+        const { rows: comments } = await client_1.pool.query(selectCommentsQuery, selectCommentsValue);
+        return [comments];
+    };
     static deleteCommentsByUsername = async (username) => {
-        const deleteCommentsQuery = `DELETE FROM comments WHERE post_id = $1`;
-        const [posts] = await posts_1.PostsRepo.selectPostsByUsername(username);
-        const deleteCommentsValue = posts.map((post) => post.id);
+        const [comments] = await this.selectCommentsByUsername(username);
+        const deleteCommentsQuery = `DELETE FROM comments WHERE user_name = $1`;
+        const deleteCommentsValue = comments.map((comment) => comment.user_name);
         deleteCommentsValue.forEach((value) => {
             client_1.pool.query(deleteCommentsQuery, [value], (err, _res) => {
                 if (err)
                     console.log(err);
             });
         });
-        return { success: true, message: "Comments deleted successfully" };
     };
 }
 exports.CommentsRepo = CommentsRepo;

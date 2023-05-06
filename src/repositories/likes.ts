@@ -174,18 +174,28 @@ export class LikesRepo {
     } catch (err) {}
   };
 
-  static deleteLikesByPostId = async (username: string) => {
-    const deleteLikesQuery = `DELETE FROM likes WHERE post_id = $1`;
+  static deleteLikesByUsername = async (username: string) => {
+    const [posts] = await this.selectLikesByUsername(username);
 
-    const [posts] = await PostsRepo.selectPostsByUsername(username);
-    const deleteCommentsValue = posts.map((post: Post) => post.id);
+    const deleteLikesQuery = `DELETE FROM likes WHERE user_name = $1`;
+    const deleteLikesValue = posts.map((post: Post) => post.user_name);
 
-    deleteCommentsValue.forEach((value) => {
+    deleteLikesValue.forEach((value) => {
       pool.query(deleteLikesQuery, [value], (err, _res) => {
         if (err) console.log(err);
       });
     });
+  };
 
-    return { success: true, message: "Likes deleted successfully" };
+  static selectLikesByUsername = async (username: string) => {
+    const selectLikesQuery = `SELECT * FROM likes WHERE user_name = $1`;
+    const selectLikesValue = [username];
+
+    const { rows: likes } = await pool.query(
+      selectLikesQuery,
+      selectLikesValue
+    );
+
+    return [likes];
   };
 }

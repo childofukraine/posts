@@ -29,9 +29,15 @@ class Controller {
             if (!userExists.length) {
                 throw (0, boom_1.badData)(`Wrong username`);
             }
-            await likes_1.LikesRepo.deleteLikesByPostId(username);
-            await comments_1.CommentsRepo.deleteCommentsByUsername(username);
-            await posts_1.PostsRepo.deletePostByUserName(username);
+            const [userLikes] = await likes_1.LikesRepo.selectLikesByUsername(username);
+            const [userComments] = await comments_1.CommentsRepo.selectCommentsByUsername(username);
+            const [userPosts] = await posts_1.PostsRepo.selectPostsByUsername(username);
+            if (userLikes.length)
+                await likes_1.LikesRepo.deleteLikesByUsername(username);
+            if (userComments.length)
+                await comments_1.CommentsRepo.deleteCommentsByUsername(username);
+            if (userPosts.length)
+                await posts_1.PostsRepo.deletePostByUserName(username);
             const deleteUser = await users_1.UsersRepo.deleteUser(username);
             if (!deleteUser.success) {
                 throw (0, boom_1.badData)(`Error deleting user!`);

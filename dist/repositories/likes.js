@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LikesRepo = void 0;
 const client_1 = require("../database/client");
-const posts_1 = require("./posts");
 class LikesRepo {
     static likePost = async (postId, username) => {
         try {
@@ -153,17 +152,22 @@ class LikesRepo {
         }
         catch (err) { }
     };
-    static deleteLikesByPostId = async (username) => {
-        const deleteLikesQuery = `DELETE FROM likes WHERE post_id = $1`;
-        const [posts] = await posts_1.PostsRepo.selectPostsByUsername(username);
-        const deleteCommentsValue = posts.map((post) => post.id);
-        deleteCommentsValue.forEach((value) => {
+    static deleteLikesByUsername = async (username) => {
+        const [posts] = await this.selectLikesByUsername(username);
+        const deleteLikesQuery = `DELETE FROM likes WHERE user_name = $1`;
+        const deleteLikesValue = posts.map((post) => post.user_name);
+        deleteLikesValue.forEach((value) => {
             client_1.pool.query(deleteLikesQuery, [value], (err, _res) => {
                 if (err)
                     console.log(err);
             });
         });
-        return { success: true, message: "Likes deleted successfully" };
+    };
+    static selectLikesByUsername = async (username) => {
+        const selectLikesQuery = `SELECT * FROM likes WHERE user_name = $1`;
+        const selectLikesValue = [username];
+        const { rows: likes } = await client_1.pool.query(selectLikesQuery, selectLikesValue);
+        return [likes];
     };
 }
 exports.LikesRepo = LikesRepo;
