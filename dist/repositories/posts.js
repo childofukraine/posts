@@ -36,5 +36,20 @@ class PostsRepo {
         const { rows: post } = await client_1.pool.query(selectPostByIdQuery, selectValues);
         return post;
     };
+    static selectPostsByUsername = async (username) => {
+        const selectPostsByUsernameQuery = `SELECT * FROM posts WHERE user_name = $1`;
+        const selectValue = [username];
+        const { rows: posts } = await client_1.pool.query(selectPostsByUsernameQuery, selectValue);
+        return [posts];
+    };
+    static deletePostByUserName = async (username) => {
+        const deletePostQuery = `DELETE FROM posts WHERE user_name = $1`;
+        const deleteValue = [username];
+        client_1.pool.query(deletePostQuery, deleteValue, (err, _res) => {
+            if (err)
+                console.log(err);
+        });
+        return { success: true, message: "Posts deleted successfully" };
+    };
 }
 exports.PostsRepo = PostsRepo;

@@ -29,6 +29,9 @@ class Controller {
             if (!userExists.length) {
                 throw (0, boom_1.badData)(`Wrong username`);
             }
+            await likes_1.LikesRepo.deleteLikesByPostId(username);
+            await comments_1.CommentsRepo.deleteCommentsByUsername(username);
+            await posts_1.PostsRepo.deletePostByUserName(username);
             const deleteUser = await users_1.UsersRepo.deleteUser(username);
             if (!deleteUser.success) {
                 throw (0, boom_1.badData)(`Error deleting user!`);

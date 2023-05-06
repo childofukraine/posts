@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import { router } from "./router/router";
 import { errorHandler } from "./util/errorHandler";
+import { PostsRepo } from "./repositories/posts";
 
 const app = express();
 

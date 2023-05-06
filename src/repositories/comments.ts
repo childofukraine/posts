@@ -1,5 +1,7 @@
 import moment from "moment-timezone";
 import { pool } from "../database/client";
+import { Post } from "../types";
+import { PostsRepo } from "./posts";
 
 export class CommentsRepo {
   static createComment = async (
@@ -30,5 +32,19 @@ export class CommentsRepo {
       console.log(err);
       return { success: false, message: "Comment doesnt created" };
     }
+  };
+  static deleteCommentsByUsername = async (username: string) => {
+    const deleteCommentsQuery = `DELETE FROM comments WHERE post_id = $1`;
+
+    const [posts] = await PostsRepo.selectPostsByUsername(username)
+    const deleteCommentsValue = posts.map((post: Post) => post.id)
+
+    deleteCommentsValue.forEach((value) => {
+      pool.query(deleteCommentsQuery, [value], (err, _res) => {
+        if (err) console.log(err);
+      });
+    })
+    
+    return { success: true, message: "Comments deleted successfully" };
   };
 }

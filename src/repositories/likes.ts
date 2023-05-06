@@ -1,4 +1,6 @@
 import { pool } from "../database/client";
+import { Post } from "../types";
+import { PostsRepo } from "./posts";
 
 export class LikesRepo {
   static likePost = async (postId: string, username: string) => {
@@ -170,5 +172,20 @@ export class LikesRepo {
       await pool.query(updateDislikesQuery, updateDislikesValues);
       return { success: true, message: "Post disliked!" };
     } catch (err) {}
+  };
+
+  static deleteLikesByPostId = async (username: string) => {
+    const deleteLikesQuery = `DELETE FROM likes WHERE post_id = $1`;
+
+    const [posts] = await PostsRepo.selectPostsByUsername(username);
+    const deleteCommentsValue = posts.map((post: Post) => post.id);
+
+    deleteCommentsValue.forEach((value) => {
+      pool.query(deleteLikesQuery, [value], (err, _res) => {
+        if (err) console.log(err);
+      });
+    });
+
+    return { success: true, message: "Likes deleted successfully" };
   };
 }

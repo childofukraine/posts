@@ -38,6 +38,12 @@ export class Controller {
       if (!userExists.length) {
         throw badData(`Wrong username`);
       }
+      await LikesRepo.deleteLikesByPostId(username)
+      await CommentsRepo.deleteCommentsByUsername(
+        username
+      );
+      await PostsRepo.deletePostByUserName(username);
+
       const deleteUser = await UsersRepo.deleteUser(username);
       if (!deleteUser.success) {
         throw badData(`Error deleting user!`);
