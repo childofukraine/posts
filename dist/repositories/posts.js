@@ -18,7 +18,7 @@ class PostsRepo {
         return { success: true, message: "Post created successfully" };
     };
     static getPosts = async () => {
-        const selectPostsQuery = `SELECT * FROM posts ORDER BY rating DESC`;
+        const selectPostsQuery = `SELECT * FROM posts ORDER BY created_at ASC`;
         const { rows: posts } = await client_1.pool.query(selectPostsQuery);
         return posts;
     };
