@@ -17,7 +17,7 @@ export class PostsRepo {
   };
 
   static getPosts = async () => {
-    const selectPostsQuery = `SELECT * FROM posts ORDER BY created_at ASC`;
+    const selectPostsQuery = `SELECT * FROM posts ORDER BY id DESC`;
     const { rows: posts } = await pool.query(selectPostsQuery);
     return posts;
   };
